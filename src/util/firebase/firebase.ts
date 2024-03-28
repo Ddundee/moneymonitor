@@ -1,7 +1,9 @@
-import { initializeApp } from "firebase/app";
+import { FirebaseOptions, initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+import { GoogleAuthProvider } from "firebase/auth";
 import { getFirestore } from 'firebase/firestore'
 
-const firebaseConfig = {
+export const firebaseConfig:FirebaseOptions = {
   apiKey: "AIzaSyCSV7_HngyVTdDzGxdx7LRXGOwzl2CzcBE",
   authDomain: "expense-tracker-e5876.firebaseapp.com",
   projectId: "expense-tracker-e5876",
@@ -10,5 +12,5 @@ const firebaseConfig = {
   appId: "1:103847317177:web:17328566b36a50ef1a5568"
 };
 
-const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
+export const app = initializeApp(firebaseConfig);
+
