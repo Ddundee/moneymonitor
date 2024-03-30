@@ -1,5 +1,5 @@
 "use client";
-import { Login } from "@/components/authentication";
+import { Login, Register } from "@/components/authentication";
 import { AuthContext } from "@/context/authContext";
 import Link from "next/link";
 import { useContext } from "react";
@@ -24,7 +24,7 @@ export default function Home() {
       />
 
 
-      <Login />
+      <Register />
       <Link href={'/'}><button className="bg-[#0f172a] px-4 py-2 text-white rounded-md hover:bg-[#404040] duration-300 text-md font-medium select-none">Go Home</button></Link>
     </main>
   );
