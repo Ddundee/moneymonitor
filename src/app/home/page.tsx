@@ -1,11 +1,12 @@
 "use client";
 import { AuthContext } from '@/context/authContext';
-import { useRouter } from 'next/navigation';
 import React, { useContext, useEffect, useState } from 'react'
 import toast, { Toaster } from 'react-hot-toast';
-import { addDoc, collection, getDocs } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
 import { db } from '@/util/firebase/firebase-db';
 import Link from 'next/link';
+import Image from 'next/image';
+import PFP from '@/../public/pfp.png'
 
 type Props = {}
 interface Item {
@@ -13,7 +14,6 @@ interface Item {
     name?: string;
     price?: string;
     id?: string;
-    ownerId?: string;
 }
 
 
@@ -56,9 +56,10 @@ export default function page({ }: Props) {
         const addItem = async ({ name, price }: Item) => {
             try {
                 const docRef = await addDoc(collection(db, `${currentUser.email}`), {
-                    name: name,
-                    price: price,
+                    name,
+                    price,
                 });
+                setItems([...items, { name, price, id: docRef.id }])
                 console.log(docRef)
             }
             catch (e) {
@@ -70,19 +71,31 @@ export default function page({ }: Props) {
         const getItems = async () => {
             try {
                 const querySnapshot = await getDocs(collection(db, `${currentUser.email}`));
+                const fetchedItems: Item[] = [];
                 querySnapshot.forEach((doc) => {
-                    const data = doc.data()
-                    setItems([...items, { name: data.name, price: data.price }])
-                })
+                    const data = doc.data();
+                    fetchedItems.push({ name: data.name, price: data.price, id: doc.id });
+                });
+                setItems(fetchedItems);
+            } catch (e) {
+                console.error('Error getting documents: ', e);
+            }
+        };
+
+
+        const removeItems = async ({ name, price, id }: Item) => {
+            try {
+                const itemRef = doc(collection(db, `${currentUser.email}`), id);
+                await deleteDoc(itemRef)
             }
             catch (e) {
-                console.error('Error getting documents: ', e);
+                console.error("Error removing document: ", e);
             }
         }
 
         useEffect(() => {
             getItems();
-        }, [])
+        }, [currentUser])
 
         return (
             <div className='w-screen h-screen flex justify-center items-center'>
@@ -90,6 +103,7 @@ export default function page({ }: Props) {
                     position="bottom-right"
                     reverseOrder={false}
                 />
+                <Link href={'/profile'}><button className='w-16 h-16 border rounded-full overflow-hidden flex justify-center items-center'><Image src={PFP} alt={''} width={63} height={63} /></button></Link>
                 <div className='flex flex-col gap-3'>
                     <div className='border border-[#e5e7eb] rounded p-4 flex gap-2 shadow-md text-base font-normal [&>*]:border [&>*]:rounded-sm [&>*]:border-[#e5e5e5]'>
                         {/* <input value={newItem.emoji} type='text' className='w-5' /> */}
@@ -99,8 +113,7 @@ export default function page({ }: Props) {
                             if (newItem.name && newItem.price) {
                                 toast.success('Added new item');
                                 addItem(newItem)
-                                setItems([...items, newItem])
-
+                                setNewItem({ name: "", price: "" })
                             }
                             else {
                                 toast.error('Enter something valid into the inputs')
@@ -111,6 +124,7 @@ export default function page({ }: Props) {
                         {items.map((item) => (
                             <button className='border border-[#e5e7eb] rounded p-4 flex gap-2 shadow-md text-base font-normal hover:[&>.first]:opacity-20 duration-1000' onClick={() => {
                                 toast.success("Removed item")
+                                removeItems(item);
                                 setItems(items.slice(0, items.indexOf(item)).concat(items.slice(items.indexOf(item) + 1)))
                             }}>
                                 {/* <p>{item.emoji}</p> */}
@@ -119,7 +133,9 @@ export default function page({ }: Props) {
                                     <p className='w-24 text-end'>${parseFloat(item.price ? item.price : "0")}</p>
                                 </div>
                                 <div className='absolute items-center w-[350px] opacity-0 hover:opacity-100 bg-white bg-opacity-70'>
-                                    <p>X</p>
+                                    <button onClick={() => {
+
+                                    }}>X</button>
                                 </div>
                             </button>
                         ))}
@@ -134,33 +150,10 @@ export default function page({ }: Props) {
                         </div>
                     )}
                 </div>
-                {/* <Line
-                    data={{
-                        datasets: [
-                            {
-                                data: [10, 20, 30]
-                            }
-                        ]
-                    }}
-                    options={{
-                        plugins: {
-                            title: {
-                                display: true,
-                                text: "Users Gained between 2016-2020"
-                            },
-                            legend: {
-                                display: false
-                            },
-
-                        },
-                    }}
-                /> */}
             </div>
         )
     }
     else {
-        // const router = useRouter()
-        // router.push('/');
         return (
             <div className='flex h-screen w-screen justify-center items-center'>
                 <Link href={'/'}><button className="bg-[#0f172a] px-4 py-2 text-white rounded-md hover:bg-[#404040] duration-300 text-md font-medium select-none">How did you get here?</button></Link>
