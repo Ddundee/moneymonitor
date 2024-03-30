@@ -4,12 +4,12 @@ import { GoogleAuthProvider } from "firebase/auth";
 import { getFirestore } from 'firebase/firestore'
 
 export const firebaseConfig:FirebaseOptions = {
-  apiKey: "AIzaSyCSV7_HngyVTdDzGxdx7LRXGOwzl2CzcBE",
-  authDomain: "expense-tracker-e5876.firebaseapp.com",
-  projectId: "expense-tracker-e5876",
-  storageBucket: "expense-tracker-e5876.appspot.com",
-  messagingSenderId: "103847317177",
-  appId: "1:103847317177:web:17328566b36a50ef1a5568"
+  apiKey: process.env.API_KEY,
+  authDomain: process.env.AUTH_DOMAIN,
+  projectId: process.env.PROJECT_ID,
+  storageBucket: process.env.STORAGE_BUCKET,
+  messagingSenderId: process.env.MESSAGING_SENDER_ID,
+  appId: process.env.APP_ID
 };
 
 export const app = initializeApp(firebaseConfig);
