@@ -14,11 +14,3 @@ export const firebaseConfig:FirebaseOptions = {
 };
 
 export const app = initializeApp(firebaseConfig);
-
-const appCheck = initializeAppCheck(app, {
-  provider: new ReCaptchaV3Provider(process.env.SITE_KEY ? process.env.SITE_KEY : ""),
-
-  // Optional argument. If true, the SDK automatically refreshes App Check
-  // tokens as needed.
-  isTokenAutoRefreshEnabled: true
-});
