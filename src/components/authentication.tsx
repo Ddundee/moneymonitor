@@ -47,7 +47,6 @@ export function Login() {
                         })
                         .catch((error: AuthError) => {
                             toast.error('There was an error. Try again later.')
-                            console.log(error.message)
                         })
                 }}>Login</button>
                 <button onClick={() => {
@@ -59,7 +58,6 @@ export function Login() {
                         })
                         .catch((error: AuthError) => {
                             toast.error('There was an error. Try again later.')
-                            console.log(error.message)
                         })
                 }} className="bg-[#f4f4f5] rounded-md hover:bg-[#ffffff] duration-300 text-md font-medium select-none text-[#0f172a]"><Image src={GoogleLogo} alt={""} width={40} height={40} /></button>
                 <Link href={'/register'}>
@@ -111,7 +109,6 @@ export function Register() {
                         })
                         .catch((error: AuthError) => {
                             toast.error('There was an error. Try again later.')
-                            console.log(error.message)
                         })
                 }}>Register</button>
                 <button onClick={() => {
@@ -123,7 +120,6 @@ export function Register() {
                         })
                         .catch((error: AuthError) => {
                             toast.error('There was an error. Try again later.')
-                            console.log(error.message)
                         })
                 }} className="bg-[#f4f4f5] rounded-md hover:bg-[#ffffff] duration-300 text-md font-medium select-none text-[#0f172a]"><Image src={GoogleLogo} alt={""} width={40} height={40} /></button>
                 <Link href={'/login'}>
